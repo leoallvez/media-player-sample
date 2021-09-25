@@ -18,7 +18,7 @@ import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.EXTRA_ACTI
 import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.EXTRA_FILE
 import java.io.File
 
-class MediaNotificationManager(
+class NotificationManager(
     private val service: PlayerService
 ) {
 
