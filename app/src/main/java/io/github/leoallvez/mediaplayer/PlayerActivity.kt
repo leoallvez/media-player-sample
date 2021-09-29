@@ -13,8 +13,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
     private var service: PlayerService? = null
-    private val url: String = "https://demo.azuracast.com/radio/8000/radio.mp3"
-
+    private var url: String = "https://radio.vitaminanerd.com.br/radio/8000/radio.mp3?1555371883/stream?type=.mp3"
+//    private val url: String = "https://demo.azuracast.com/radio/8000/radio.mp3"
+//
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,6 +31,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     override fun onResume() {
         super.onResume()
         val intent = Intent(this, PlayerService::class.java)
+        intent.putExtra(PlayerService.EXTRA_URI, url)
         startService(intent)
         bindService(intent, this, 0)
     }
@@ -40,7 +42,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun play() {
-        service?.play(url)
+        service?.play()
     }
 
     private fun pause() {
@@ -53,7 +55,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
     override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
         service = (binder as PlayerBinder).service
-        service?.play(url)
+        service?.play()
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {

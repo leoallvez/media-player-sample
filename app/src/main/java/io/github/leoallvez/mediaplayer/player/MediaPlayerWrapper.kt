@@ -1,48 +1,44 @@
 package io.github.leoallvez.mediaplayer.player
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
+import android.content.Context
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.Player
 
-class MediaPlayerWrapper {
-    
-    private var streamingUrl: String = ""
-    private var isPaused: Boolean = false
-    private val mediaPlayer: MediaPlayer by lazy { MediaPlayer() }
+class MediaPlayerWrapper(private val service: IPlayerService, context: Context) {
 
-    val isNotPlaying: Boolean
-        get() { return mediaPlayer.isPlaying.not() && isPaused.not() }
-
-    fun prepare(url: String) = with(mediaPlayer) {
-        reset()
-        setAudioAttributes(getAudioAttributes())
-        setDataSource(url)
-        prepare()
-        streamingUrl = url
+    private val player: SimpleExoPlayer by lazy {
+        SimpleExoPlayer.Builder(context).build()
     }
 
-    private fun getAudioAttributes(): AudioAttributes {
-        return AudioAttributes.Builder()
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
+    fun isPlaying(): Boolean {
+        return player.playbackState == Player.STATE_READY
+    }
+
+    fun isNotPlaying(): Boolean = isPlaying().not()
+
+    fun prepare() {
+        val uri = service.getSteamUri()
+        val mediaItem: MediaItem = MediaItem.fromUri(uri)
+        player.setMediaItem(mediaItem)
+        player.prepare()
     }
 
     fun start() {
-        isPaused = false
-        mediaPlayer.start()
+        player.playWhenReady = true
+        player.play()
     }
 
     fun pause() {
-        if (mediaPlayer.isPlaying) {
-            isPaused = true
-            mediaPlayer.pause()
+        if(player.isPlaying) {
+            player.pause()
         }
     }
 
     fun stop() {
-        if (mediaPlayer.isPlaying || isPaused) {
-            isPaused = false
-            mediaPlayer.stop()
-            mediaPlayer.reset()
+        if (player.isPlaying) {
+            player.playWhenReady = false
+            player.stop()
         }
     }
 }

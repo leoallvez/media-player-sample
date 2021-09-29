@@ -15,7 +15,6 @@ import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.ACTION_PAU
 import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.ACTION_PLAY
 import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.ACTION_STOP
 import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.EXTRA_ACTION
-import io.github.leoallvez.mediaplayer.player.PlayerService.Companion.EXTRA_FILE
 import java.io.File
 
 class NotificationManager(
@@ -39,7 +38,7 @@ class NotificationManager(
 
         val itPlay = Intent(service, PlayerService::class.java).apply {
             putExtra(EXTRA_ACTION, ACTION_PLAY)
-            putExtra(EXTRA_FILE, url)
+//            putExtra(EXTRA_FILE, url)
         }
 
         val itPause = Intent(service, PlayerService::class.java).apply {
